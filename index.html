@@ -14,8 +14,6 @@
     --text: #E8F0F4;
     --muted: #687681;
     --muted-2: #46515A;
-    --ok: #4ADE80;
-    --bad: #F87171;
   }
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -76,7 +74,7 @@
   }
   @keyframes pulseDot {
     0%,100% { opacity: 1; }
-    50%     { opacity: .55; }
+    50% { opacity: .55; }
   }
 
   /* ---------- Empty state ---------- */
@@ -291,7 +289,7 @@
     transform: none;
   }
 
-  /* ---------- Overlay / Drawer ---------- */
+  /* ---------- Drawer ---------- */
   .overlay {
     position: fixed; inset: 0;
     display: flex;
@@ -317,19 +315,8 @@
     flex-direction: column;
     transform: translateX(-100%);
     transition: transform .28s cubic-bezier(.22,.61,.36,1);
-    overflow-y: auto;
   }
   .overlay.open .drawer { transform: translateX(0); }
-
-  /* Settings slides from the right */
-  .settings-drawer {
-    margin-left: auto;
-    border-right: 0;
-    border-left: 1px solid #18222A;
-    transform: translateX(100%);
-    width: min(88%, 380px);
-  }
-  #settingsOverlay.open .settings-drawer { transform: translateX(0); }
 
   .drawer-top {
     display: flex; justify-content: space-between; align-items: center;
@@ -352,13 +339,9 @@
     font-weight: 600;
     cursor: pointer;
     text-align: left;
-    transition: background .15s ease, transform .1s ease;
-    font-family: inherit;
-    width: 100%;
+    transition: background .15s ease;
   }
   .new-chat:hover { background: #0C131A; }
-  .new-chat:active { transform: scale(.98); }
-  .new-chat:disabled { opacity: .5; cursor: not-allowed; }
 
   .section {
     color: #56636C;
@@ -369,141 +352,13 @@
   .history { color: #67747D; line-height: 20px; font-size: 14px; }
 
   .drawer-bottom { margin-top: auto; }
-
-  /* Clickable drawer item (fixed) */
-  button.drawer-item {
-    background: transparent;
-    border: 0;
-    color: #B8C4CB;
-    font-size: 15px;
-    padding: 12px 0;
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
-    font-family: inherit;
+  .drawer-item {
+    color: #B8C4CB; font-size: 15px;
+    padding: 12px 0; cursor: pointer;
     display: block;
-    transition: color .15s ease;
   }
-  button.drawer-item:hover  { color: #F2F8FB; }
-  button.drawer-item:active { transform: scale(.98); }
-
+  .drawer-item:hover { color: #F2F8FB; }
   .version { color: var(--muted-2); font-size: 11px; margin-top: 12px; }
-
-  /* ---------- Settings fields ---------- */
-  .field { display: block; margin-bottom: 12px; }
-  .field-label {
-    display: block;
-    color: #67747D;
-    font-size: 12px;
-    margin-bottom: 6px;
-    letter-spacing: .5px;
-  }
-  .field-input {
-    width: 100%;
-    background: #0B1016;
-    border: 1px solid #20303A;
-    border-radius: 12px;
-    color: #F2F7FA;
-    font-size: 14px;
-    padding: 12px 14px;
-    outline: none;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    transition: border-color .2s ease;
-  }
-  .field-input:focus { border-color: #4C8399; }
-  .field-input[type="password"] { letter-spacing: 2px; }
-
-  .settings-actions {
-    display: flex; gap: 8px; margin-bottom: 8px;
-  }
-  .settings-actions .new-chat {
-    flex: 1; text-align: center; padding: 12px;
-  }
-
-  .field-hint {
-    color: #56636C; font-size: 12px; margin: 4px 0 0;
-    line-height: 18px;
-  }
-
-  .key-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: #67747D;
-    margin-top: 6px;
-  }
-  .key-status .dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: #6D7A84;
-    transition: background .2s ease, box-shadow .2s ease;
-  }
-  .key-status.ok  .dot { background: var(--ok);  box-shadow: 0 0 8px var(--ok); }
-  .key-status.bad .dot { background: var(--bad); box-shadow: 0 0 8px var(--bad); }
-
-  /* ---------- Toggle row ---------- */
-  .toggle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: #B8C4CB;
-    font-size: 15px;
-    padding: 12px 0;
-    cursor: pointer;
-  }
-  .toggle-row input[type="checkbox"] {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 44px; height: 26px;
-    border-radius: 26px;
-    background: #1A242C;
-    position: relative;
-    cursor: pointer;
-    transition: background .2s ease;
-    border: 0;
-    outline: none;
-  }
-  .toggle-row input[type="checkbox"]::after {
-    content: "";
-    position: absolute;
-    top: 3px; left: 3px;
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    background: #6D7A84;
-    transition: transform .2s ease, background .2s ease;
-  }
-  .toggle-row input[type="checkbox"]:checked { background: #12303C; }
-  .toggle-row input[type="checkbox"]:checked::after {
-    transform: translateX(18px);
-    background: var(--blue);
-  }
-  .toggle-row input[type="checkbox"]:disabled {
-    opacity: .4; cursor: not-allowed;
-  }
-
-  /* ---------- Toast ---------- */
-  .toast {
-    position: fixed;
-    left: 50%; bottom: 32px;
-    transform: translateX(-50%) translateY(20px);
-    background: #0B1016;
-    border: 1px solid #20303A;
-    color: #E8F0F4;
-    padding: 12px 18px;
-    border-radius: 14px;
-    font-size: 14px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .2s ease, transform .25s ease;
-    z-index: 100;
-    box-shadow: 0 10px 30px rgba(0,0,0,.5);
-    max-width: 90vw;
-    text-align: center;
-  }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
 
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(8px); }
@@ -539,7 +394,7 @@
   </div>
 
   <!-- Chat list -->
-  <div class="chat" id="chat" style="display:none;" aria-live="polite"></div>
+  <div class="chat" id="chat" style="display:none;"></div>
 
   <!-- Generating row -->
   <div class="generating" id="generating" style="display:none;">
@@ -553,15 +408,14 @@
 
   <!-- Composer -->
   <div class="composer" id="composer">
-    <textarea id="input" rows="1" placeholder="Message ORIX…"
-              autocomplete="off" autocapitalize="sentences"></textarea>
-    <button class="round-btn" id="voiceBtn" aria-label="Voice input" title="Voice input">●</button>
+    <textarea id="input" rows="1" placeholder="Message ORIX…" autocomplete="off"></textarea>
+    <button class="round-btn" id="voiceBtn" aria-label="Voice input">●</button>
     <button class="round-btn" id="sendBtn" aria-label="Send" disabled>↑</button>
   </div>
 </div>
 
-<!-- Main drawer -->
-<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Menu">
+<!-- Drawer -->
+<div class="overlay" id="overlay">
   <div class="scrim" id="scrim"></div>
   <aside class="drawer">
     <div class="drawer-top">
@@ -572,57 +426,7 @@
     <div class="section">RECENT</div>
     <div class="history">Your conversations will appear here.</div>
     <div class="drawer-bottom">
-      <button class="drawer-item" id="settingsBtn" type="button">⚙ Settings</button>
-      <div class="version">ORIX web • v1.0</div>
-    </div>
-  </aside>
-</div>
-
-<!-- Settings panel (slides from right) -->
-<div class="overlay" id="settingsOverlay" role="dialog" aria-modal="true" aria-label="Settings">
-  <div class="scrim" id="settingsScrim"></div>
-  <aside class="drawer settings-drawer">
-    <div class="drawer-top">
-      <span class="drawer-title">SETTINGS</span>
-      <button class="close" id="settingsCloseBtn" aria-label="Close settings">×</button>
-    </div>
-
-    <div class="section" style="margin-top:0;">API</div>
-
-    <label class="field">
-      <span class="field-label">Endpoint</span>
-      <input class="field-input" id="apiInput" type="text" spellcheck="false"
-             placeholder="http://192.168.1.5:8787" autocomplete="off" />
-    </label>
-
-    <label class="field">
-      <span class="field-label">Deploy key</span>
-      <input class="field-input" id="keyInput" type="password" spellcheck="false"
-             placeholder="orix_••••••••" autocomplete="off" />
-    </label>
-
-    <div class="settings-actions">
-      <button class="new-chat" id="saveApiBtn">Save endpoint</button>
-      <button class="new-chat" id="saveKeyBtn">Save key</button>
-    </div>
-    <div class="settings-actions">
-      <button class="new-chat" id="testKeyBtn">Test key</button>
-      <button class="new-chat" id="clearKeyBtn">Clear key</button>
-    </div>
-
-    <p class="field-hint key-status" id="keyHint"></p>
-
-    <div class="section">VOICE</div>
-    <label class="toggle-row">
-      <span>Enable voice input</span>
-      <input type="checkbox" id="voiceToggle" />
-    </label>
-    <p class="field-hint" id="voiceHint"></p>
-
-    <div class="section">DATA</div>
-    <button class="new-chat" id="clearHistoryBtn">Clear conversation</button>
-
-    <div class="drawer-bottom">
+      <span class="drawer-item">⚙ Settings</span>
       <div class="version">ORIX web • v1.0</div>
     </div>
   </aside>
@@ -633,40 +437,27 @@
   'use strict';
 
   // ---- Config ------------------------------------------------------------
+  // Same host that serves this page. Override with ?api=http://host:port
   const params = new URLSearchParams(location.search);
-  const DEFAULT_API = params.get('api')
-    || localStorage.getItem('orix.api')
-    || `${location.protocol}//${location.host}`;
+  const API_URL = params.get('api') || `${location.protocol}//${location.host}`;
 
   // ---- DOM refs ----------------------------------------------------------
   const $ = (id) => document.getElementById(id);
-
   const emptyState = $('emptyState');
   const chatEl     = $('chat');
   const inputEl    = $('input');
   const sendBtn    = $('sendBtn');
   const voiceBtn   = $('voiceBtn');
   const generating = $('generating');
+  const overlay    = $('overlay');
   const idleWave   = $('idleWave');
-
-  const overlay         = $('overlay');
-  const settingsOverlay = $('settingsOverlay');
-
-  const apiInput    = $('apiInput');
-  const keyInput    = $('keyInput');
-  const keyHint     = $('keyHint');
-  const voiceToggle = $('voiceToggle');
-  const voiceHint   = $('voiceHint');
 
   // ---- State -------------------------------------------------------------
   /** @type {{id:string, role:'user'|'assistant', content:string}[]} */
   let messages = [];
-  let loading   = false;
+  let loading = false;
   let listening = false;
-  let seq       = 0;
-
-  let currentApi = DEFAULT_API.replace(/\/+$/, '');
-  let deployKey  = localStorage.getItem('orix.key') || '';
+  let seq = 0;
 
   // ---- Utils -------------------------------------------------------------
   const uid = () => `${Date.now()}-${++seq}`;
@@ -690,43 +481,6 @@
     requestAnimationFrame(() => {
       chatEl.scrollTop = chatEl.scrollHeight;
     });
-  }
-
-  let toastTimer;
-  function toast(msg) {
-    let el = document.querySelector('.toast');
-    if (!el) {
-      el = document.createElement('div');
-      el.className = 'toast';
-      document.body.appendChild(el);
-    }
-    el.textContent = msg;
-    requestAnimationFrame(() => el.classList.add('show'));
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 1900);
-  }
-
-  // ---- Key handling ------------------------------------------------------
-  function saveDeployKey(val) {
-    deployKey = val.trim();
-    if (deployKey) localStorage.setItem('orix.key', deployKey);
-    else           localStorage.removeItem('orix.key');
-  }
-
-  const hasDeployKey = () => deployKey.length > 0;
-
-  function refreshKeyStatus(state /* 'ok' | 'bad' | undefined */) {
-    if (!hasDeployKey()) {
-      keyHint.className = 'field-hint key-status';
-      keyHint.innerHTML = '<span class="dot"></span> No key set — requests will be rejected.';
-      return;
-    }
-    const cls   = state === 'ok' ? 'ok' : state === 'bad' ? 'bad' : '';
-    const label = state === 'ok' ? 'Key accepted'
-                : state === 'bad' ? 'Key rejected by server'
-                : 'Key stored locally';
-    keyHint.className = `field-hint key-status ${cls}`;
-    keyHint.innerHTML = `<span class="dot"></span> ${label}`;
   }
 
   // ---- Rendering ---------------------------------------------------------
@@ -773,12 +527,6 @@
     const text = inputEl.value.trim();
     if (!text || loading) return;
 
-    if (!hasDeployKey()) {
-      toast('Set your deploy key in Settings first');
-      openSettings();
-      return;
-    }
-
     haptic(8);
     appendMessage({ id: uid(), role: 'user', content: text });
     inputEl.value = '';
@@ -793,27 +541,18 @@
     const timeout = setTimeout(() => controller.abort(), 60000);
 
     try {
-      const res = await fetch(`${currentApi}/api/chat`, {
+      const res = await fetch(`${API_URL}/api/chat`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${deployKey}`,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: messages.map(({ role, content }) => ({ role, content })),
         }),
         signal: controller.signal,
       });
 
-      if (res.status === 401 || res.status === 403) {
-        refreshKeyStatus('bad');
-        throw new Error('Unauthorized — deploy key is missing or invalid.');
-      }
-
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
 
-      refreshKeyStatus('ok');
       appendMessage({
         id: uid(),
         role: 'assistant',
@@ -822,7 +561,7 @@
     } catch (err) {
       const msg = err.name === 'AbortError'
         ? 'Request timed out. The ORIX server took too long to respond.'
-        : err.message || 'Connection error.';
+        : `Connection error: ${err.message}. Check that the ORIX server is running.`;
       appendMessage({ id: uid(), role: 'assistant', content: msg });
       console.error('[ORIX]', err);
     } finally {
@@ -834,13 +573,9 @@
     }
   }
 
-  // ---- Voice (Web Speech API) -------------------------------------------
+  // ---- Voice (Web Speech API if available) -------------------------------
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   let recognizer = null;
-
-  function voiceEnabled() {
-    return localStorage.getItem('orix.voice') !== 'off';
-  }
 
   function initRecognizer() {
     if (!SR) return null;
@@ -875,10 +610,6 @@
   function toggleVoice() {
     haptic(6);
 
-    if (!voiceEnabled()) {
-      toast('Voice input is disabled in Settings');
-      return;
-    }
     if (!SR) {
       appendMessage({
         id: uid(),
@@ -905,8 +636,8 @@
   }
 
   // ---- Drawer ------------------------------------------------------------
-  const openDrawer  = () => overlay.classList.add('open');
-  const closeDrawer = () => overlay.classList.remove('open');
+  function openDrawer()  { overlay.classList.add('open'); }
+  function closeDrawer() { overlay.classList.remove('open'); }
 
   function newChat() {
     messages = [];
@@ -914,49 +645,6 @@
     closeDrawer();
     inputEl.focus();
     haptic(8);
-  }
-
-  // ---- Settings ----------------------------------------------------------
-  function refreshVoiceUI() {
-    voiceToggle.checked  = voiceEnabled();
-    voiceToggle.disabled = !SR;
-    voiceHint.textContent = SR
-      ? 'Uses your browser\'s built-in speech recognition.'
-      : 'Speech recognition is not supported in this browser.';
-  }
-
-  function openSettings() {
-    haptic(8);
-    closeDrawer();
-    apiInput.value = currentApi;
-    keyInput.value = deployKey;
-    refreshKeyStatus();
-    refreshVoiceUI();
-    settingsOverlay.classList.add('open');
-  }
-
-  const closeSettings = () => settingsOverlay.classList.remove('open');
-
-  async function testKey() {
-    const candidate = keyInput.value.trim();
-    if (!candidate) { toast('Enter a key first'); return; }
-
-    try {
-      const res = await fetch(`${currentApi}/api/auth/check`, {
-        headers: { 'Authorization': `Bearer ${candidate}` },
-      });
-      if (res.ok) {
-        saveDeployKey(candidate);
-        refreshKeyStatus('ok');
-        toast('Key is valid');
-      } else {
-        refreshKeyStatus('bad');
-        toast('Key rejected by server');
-      }
-    } catch (e) {
-      refreshKeyStatus('bad');
-      toast('Could not reach server');
-    }
   }
 
   // ---- Wire up -----------------------------------------------------------
@@ -970,9 +658,19 @@
 
   sendBtn.addEventListener('click', send);
   voiceBtn.addEventListener('click', toggleVoice);
-
   $('menuBtn').addEventListener('click', openDrawer);
   $('newBtn').addEventListener('click', newChat);
   $('newChatBtn').addEventListener('click', newChat);
   $('closeBtn').addEventListener('click', closeDrawer);
-  $('scrim').addEventListener('click
+  $('scrim').addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDrawer();
+  });
+
+  // Boot
+  refreshSendBtn();
+  inputEl.focus();
+})();
+</script>
+</body>
+</html>
