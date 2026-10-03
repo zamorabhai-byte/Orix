@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#05070A" />
+<title>ORIX</title>
+<style>
+  :root {
+    --blue: #9FE8FF;
+    --bg: #05070A;
+    --card: #0B1016;
+    --border: #202A33;
+    --text: #E8F0F4;
+    --muted: #687681;
+    --muted-2: #46515A;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: radial-gradient(120% 80% at 50% 0%, #0A1016 0%, #05070A 45%, #030405 100%);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow: hidden;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    max-width: 720px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    height: 62px;
+    flex: 0 0 62px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    border-bottom: 1px solid #10161D;
+    backdrop-filter: blur(8px);
+    position: relative;
+    z-index: 5;
+  }
+
+  .icon-btn {
+    width: 42px; height: 42px;
+    display: grid; place-items: center;
+    background: transparent; border: 0;
+    color: #B8C2CB; font-size: 22px; cursor: pointer;
+    border-radius: 12px;
+    transition: background .15s ease, transform .1s ease;
+  }
+  .icon-btn:hover { background: #0E141B; }
+  .icon-btn:active { transform: scale(.94); }
+
+  .brand {
+    display: flex; align-items: center; gap: 8px;
+    color: #F5FBFF; font-weight: 800; letter-spacing: 3px; font-size: 17px;
+  }
+  .brand-dot {
+    width: 8px; height: 8px; border-radius: 8px;
+    background: var(--blue);
+    box-shadow: 0 0 12px var(--blue), 0 0 24px rgba(159,232,255,.5);
+    animation: pulseDot 2.4s ease-in-out infinite;
+  }
+  @keyframes pulseDot {
+    0%,100% { opacity: 1; }
+    50% { opacity: .55; }
+  }
+
+  /* ---------- Empty state ---------- */
+  .empty {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding-bottom: 30px;
+    animation: fadeIn .5s ease both;
+  }
+
+  .core {
+    width: 116px; height: 116px; border-radius: 58px;
+    display: grid; place-items: center;
+    border: 1px solid #315464;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .core::before {
+    content: "";
+    position: absolute; inset: 12px;
+    border-radius: 50%;
+    border: 1px solid var(--blue);
+    opacity: .5;
+    animation: ringSpin 8s linear infinite;
+  }
+  .core::after {
+    content: "";
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--blue);
+    box-shadow: 0 0 22px var(--blue), 0 0 44px rgba(159,232,255,.6);
+    animation: corePulse 2s ease-in-out infinite;
+  }
+  @keyframes ringSpin {
+    from { transform: rotate(0deg) scale(1); }
+    50%  { transform: rotate(180deg) scale(1.06); }
+    to   { transform: rotate(360deg) scale(1); }
+  }
+  @keyframes corePulse {
+    0%,100% { transform: scale(1); opacity: 1; }
+    50%     { transform: scale(1.25); opacity: .75; }
+  }
+
+  .greeting { font-size: 25px; font-weight: 600; color: #F4F8FA; margin: 0; }
+  .sub { color: var(--muted); margin: 8px 0 0; font-size: 14px; }
+
+  /* ---------- Wave ---------- */
+  .wave {
+    display: flex; align-items: center; gap: 5px;
+    height: 38px; margin-top: 24px;
+  }
+  .wave span {
+    width: 2px; border-radius: 2px;
+    background: var(--blue);
+    box-shadow: 0 0 6px rgba(159,232,255,.6);
+    animation: wavePulse 1.2s ease-in-out infinite;
+    transform-origin: center;
+  }
+  .wave span:nth-child(1) { height: 8px;  animation-delay: 0s;   }
+  .wave span:nth-child(2) { height: 15px; animation-delay: .1s;  }
+  .wave span:nth-child(3) { height: 22px; animation-delay: .2s;  }
+  .wave span:nth-child(4) { height: 12px; animation-delay: .3s;  }
+  .wave span:nth-child(5) { height: 20px; animation-delay: .4s;  }
+  .wave span:nth-child(6) { height: 14px; animation-delay: .5s;  }
+  .wave span:nth-child(7) { height: 18px; animation-delay: .6s;  }
+
+  .wave.idle span { opacity: .5; animation-duration: 2s; }
+  .wave.active span {
+    animation-duration: .9s;
+    filter: brightness(1.2);
+  }
+
+  @keyframes wavePulse {
+    0%,100% { transform: scaleY(.6); opacity: .35; }
+    50%     { transform: scaleY(1.35); opacity: 1; }
+  }
+
+  /* ---------- Chat list ---------- */
+  .chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    padding-bottom: 24px;
+    scrollbar-width: thin;
+    scrollbar-color: #1C2730 transparent;
+  }
+  .chat::-webkit-scrollbar { width: 6px; }
+  .chat::-webkit-scrollbar-thumb { background: #1C2730; border-radius: 3px; }
+
+  .msg {
+    max-width: 88%;
+    padding: 14px;
+    border-radius: 18px;
+    margin-bottom: 12px;
+    font-size: 16px;
+    line-height: 24px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    animation: msgIn .25s ease both;
+  }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .msg.user {
+    align-self: flex-end;
+    margin-left: auto;
+    background: #101A22;
+    border-bottom-right-radius: 5px;
+  }
+  .msg.ai {
+    align-self: flex-start;
+    background: #080D12;
+    border: 1px solid #121C24;
+    border-bottom-left-radius: 5px;
+  }
+  .msg.ai::before {
+    content: "ORIX";
+    display: block;
+    color: var(--blue);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 7px;
+  }
+
+  /* ---------- Generating row ---------- */
+  .generating {
+    display: flex; align-items: center; gap: 10px;
+    padding: 0 18px 8px;
+    color: var(--muted); font-size: 12px;
+    flex: 0 0 auto;
+  }
+  .generating .wave { height: 20px; margin: 0; }
+  .generating .wave span { animation-duration: .9s; }
+
+  .spinner {
+    width: 14px; height: 14px; border-radius: 50%;
+    border: 2px solid rgba(159,232,255,.25);
+    border-top-color: var(--blue);
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ---------- Composer ---------- */
+  .composer {
+    flex: 0 0 auto;
+    margin: 12px;
+    padding: 8px;
+    min-height: 58px;
+    max-height: 150px;
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    transition: border-color .2s ease;
+  }
+  .composer:focus-within { border-color: #4C8399; }
+
+  #input {
+    flex: 1;
+    color: #F2F7FA;
+    font-size: 16px;
+    line-height: 22px;
+    padding: 10px 12px;
+    max-height: 110px;
+    background: transparent;
+    border: 0;
+    outline: none;
+    resize: none;
+    font-family: inherit;
+    scrollbar-width: none;
+  }
+  #input::-webkit-scrollbar { display: none; }
+  #input::placeholder { color: #66727D; }
+
+  .round-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: grid; place-items: center;
+    border: 0; cursor: pointer;
+    flex: 0 0 auto;
+    transition: transform .1s ease, background .2s ease;
+  }
+  .round-btn:active { transform: scale(.9); }
+
+  #voiceBtn {
+    background: transparent;
+    color: var(--blue);
+    font-size: 13px;
+  }
+  #voiceBtn.listening {
+    background: #12303C;
+    animation: voicePulse 1s ease-in-out infinite;
+  }
+  @keyframes voicePulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(159,232,255,.4); }
+    50%     { box-shadow: 0 0 0 8px rgba(159,232,255,0); }
+  }
+
+  #sendBtn {
+    background: var(--blue);
+    color: #031016;
+    font-size: 22px;
+    font-weight: 800;
+  }
+  #sendBtn:disabled {
+    opacity: .35;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ---------- Drawer ---------- */
+  .overlay {
+    position: fixed; inset: 0;
+    display: flex;
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .22s ease;
+  }
+  .overlay.open { opacity: 1; pointer-events: auto; }
+
+  .scrim {
+    flex: 1;
+    background: rgba(0,0,0,.65);
+    backdrop-filter: blur(2px);
+  }
+
+  .drawer {
+    width: min(82%, 340px);
+    background: #070A0E;
+    border-right: 1px solid #18222A;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(-100%);
+    transition: transform .28s cubic-bezier(.22,.61,.36,1);
+  }
+  .overlay.open .drawer { transform: translateX(0); }
+
+  .drawer-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px;
+  }
+  .drawer-title { font-weight: 800; letter-spacing: 3px; font-size: 17px; color: #F2F8FB; }
+  .close {
+    background: transparent; border: 0; color: #9CA9B2;
+    font-size: 30px; line-height: 1; cursor: pointer;
+    padding: 0 4px;
+  }
+
+  .new-chat {
+    border: 1px solid #20303A;
+    border-radius: 14px;
+    padding: 14px;
+    background: transparent;
+    color: var(--blue);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: left;
+    transition: background .15s ease;
+  }
+  .new-chat:hover { background: #0C131A; }
+
+  .section {
+    color: #56636C;
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin: 28px 0 10px;
+  }
+  .history { color: #67747D; line-height: 20px; font-size: 14px; }
+
+  .drawer-bottom { margin-top: auto; }
+  .drawer-item {
+    color: #B8C4CB; font-size: 15px;
+    padding: 12px 0; cursor: pointer;
+    display: block;
+  }
+  .drawer-item:hover { color: #F2F8FB; }
+  .version { color: var(--muted-2); font-size: 11px; margin-top: 12px; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 480px) {
+    .greeting { font-size: 22px; }
+    .core { width: 100px; height: 100px; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <button class="icon-btn" id="menuBtn" aria-label="Open menu">☰</button>
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span>ORIX</span>
+    </div>
+    <button class="icon-btn" id="newBtn" aria-label="New chat">＋</button>
+  </header>
+
+  <!-- Empty state -->
+  <div class="empty" id="emptyState">
+    <div class="core"></div>
+    <h1 class="greeting">How can I help?</h1>
+    <p class="sub">Ask ORIX anything.</p>
+    <div class="wave idle" id="idleWave">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <!-- Chat list -->
+  <div class="chat" id="chat" style="display:none;"></div>
+
+  <!-- Generating row -->
+  <div class="generating" id="generating" style="display:none;">
+    <div class="spinner"></div>
+    <div class="wave active">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span>
+    </div>
+    <span>ORIX is thinking…</span>
+  </div>
+
+  <!-- Composer -->
+  <div class="composer" id="composer">
+    <textarea id="input" rows="1" placeholder="Message ORIX…" autocomplete="off"></textarea>
+    <button class="round-btn" id="voiceBtn" aria-label="Voice input">●</button>
+    <button class="round-btn" id="sendBtn" aria-label="Send" disabled>↑</button>
+  </div>
+</div>
+
+<!-- Drawer -->
+<div class="overlay" id="overlay">
+  <div class="scrim" id="scrim"></div>
+  <aside class="drawer">
+    <div class="drawer-top">
+      <span class="drawer-title">ORIX</span>
+      <button class="close" id="closeBtn" aria-label="Close menu">×</button>
+    </div>
+    <button class="new-chat" id="newChatBtn">＋ New chat</button>
+    <div class="section">RECENT</div>
+    <div class="history">Your conversations will appear here.</div>
+    <div class="drawer-bottom">
+      <span class="drawer-item">⚙ Settings</span>
+      <div class="version">ORIX web • v1.0</div>
+    </div>
+  </aside>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // ---- Config ------------------------------------------------------------
+  // Same host that serves this page. Override with ?api=http://host:port
+  const params = new URLSearchParams(location.search);
+  const API_URL = params.get('api') || `${location.protocol}//${location.host}`;
+
+  // ---- DOM refs ----------------------------------------------------------
+  const $ = (id) => document.getElementById(id);
+  const emptyState = $('emptyState');
+  const chatEl     = $('chat');
+  const inputEl    = $('input');
+  const sendBtn    = $('sendBtn');
+  const voiceBtn   = $('voiceBtn');
+  const generating = $('generating');
+  const overlay    = $('overlay');
+  const idleWave   = $('idleWave');
+
+  // ---- State -------------------------------------------------------------
+  /** @type {{id:string, role:'user'|'assistant', content:string}[]} */
+  let messages = [];
+  let loading = false;
+  let listening = false;
+  let seq = 0;
+
+  // ---- Utils -------------------------------------------------------------
+  const uid = () => `${Date.now()}-${++seq}`;
+
+  function haptic(pattern = 8) {
+    if (navigator.vibrate) {
+      try { navigator.vibrate(pattern); } catch {}
+    }
+  }
+
+  function autoGrow() {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 110) + 'px';
+  }
+
+  function refreshSendBtn() {
+    sendBtn.disabled = loading || inputEl.value.trim().length === 0;
+  }
+
+  function scrollToBottom() {
+    requestAnimationFrame(() => {
+      chatEl.scrollTop = chatEl.scrollHeight;
+    });
+  }
+
+  // ---- Rendering ---------------------------------------------------------
+  function render() {
+    if (messages.length === 0) {
+      emptyState.style.display = 'flex';
+      chatEl.style.display = 'none';
+      chatEl.innerHTML = '';
+      return;
+    }
+
+    emptyState.style.display = 'none';
+    chatEl.style.display = 'block';
+
+    const frag = document.createDocumentFragment();
+    for (const m of messages) {
+      const div = document.createElement('div');
+      div.className = `msg ${m.role === 'user' ? 'user' : 'ai'}`;
+      div.textContent = m.content;
+      frag.appendChild(div);
+    }
+    chatEl.innerHTML = '';
+    chatEl.appendChild(frag);
+    scrollToBottom();
+  }
+
+  function appendMessage(msg) {
+    messages.push(msg);
+
+    if (chatEl.style.display === 'none') {
+      emptyState.style.display = 'none';
+      chatEl.style.display = 'block';
+    }
+
+    const div = document.createElement('div');
+    div.className = `msg ${msg.role === 'user' ? 'user' : 'ai'}`;
+    div.textContent = msg.content;
+    chatEl.appendChild(div);
+    scrollToBottom();
+  }
+
+  // ---- Sending -----------------------------------------------------------
+  async function send() {
+    const text = inputEl.value.trim();
+    if (!text || loading) return;
+
+    haptic(8);
+    appendMessage({ id: uid(), role: 'user', content: text });
+    inputEl.value = '';
+    autoGrow();
+    refreshSendBtn();
+
+    loading = true;
+    generating.style.display = 'flex';
+    idleWave.classList.add('active');
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 60000);
+
+    try {
+      const res = await fetch(`${API_URL}/api/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: messages.map(({ role, content }) => ({ role, content })),
+        }),
+        signal: controller.signal,
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+
+      appendMessage({
+        id: uid(),
+        role: 'assistant',
+        content: data.text || data.message || '(empty response)',
+      });
+    } catch (err) {
+      const msg = err.name === 'AbortError'
+        ? 'Request timed out. The ORIX server took too long to respond.'
+        : `Connection error: ${err.message}. Check that the ORIX server is running.`;
+      appendMessage({ id: uid(), role: 'assistant', content: msg });
+      console.error('[ORIX]', err);
+    } finally {
+      clearTimeout(timeout);
+      loading = false;
+      generating.style.display = 'none';
+      idleWave.classList.remove('active');
+      refreshSendBtn();
+    }
+  }
+
+  // ---- Voice (Web Speech API if available) -------------------------------
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recognizer = null;
+
+  function initRecognizer() {
+    if (!SR) return null;
+    const r = new SR();
+    r.lang = navigator.language || 'en-US';
+    r.interimResults = true;
+    r.continuous = false;
+
+    r.onresult = (e) => {
+      let transcript = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        transcript += e.results[i][0].transcript;
+      }
+      inputEl.value = transcript;
+      autoGrow();
+      refreshSendBtn();
+    };
+    r.onend = () => {
+      listening = false;
+      voiceBtn.classList.remove('listening');
+      idleWave.classList.remove('active');
+    };
+    r.onerror = (e) => {
+      console.warn('[ORIX] speech error', e.error);
+      listening = false;
+      voiceBtn.classList.remove('listening');
+      idleWave.classList.remove('active');
+    };
+    return r;
+  }
+
+  function toggleVoice() {
+    haptic(6);
+
+    if (!SR) {
+      appendMessage({
+        id: uid(),
+        role: 'assistant',
+        content: 'Speech recognition is not supported in this browser.',
+      });
+      return;
+    }
+
+    if (listening) {
+      recognizer && recognizer.stop();
+      return;
+    }
+
+    recognizer = recognizer || initRecognizer();
+    try {
+      recognizer.start();
+      listening = true;
+      voiceBtn.classList.add('listening');
+      idleWave.classList.add('active');
+    } catch (e) {
+      console.warn('[ORIX] could not start recognition', e);
+    }
+  }
+
+  // ---- Drawer ------------------------------------------------------------
+  function openDrawer()  { overlay.classList.add('open'); }
+  function closeDrawer() { overlay.classList.remove('open'); }
+
+  function newChat() {
+    messages = [];
+    render();
+    closeDrawer();
+    inputEl.focus();
+    haptic(8);
+  }
+
+  // ---- Wire up -----------------------------------------------------------
+  inputEl.addEventListener('input', () => { autoGrow(); refreshSendBtn(); });
+  inputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      send();
+    }
+  });
+
+  sendBtn.addEventListener('click', send);
+  voiceBtn.addEventListener('click', toggleVoice);
+  $('menuBtn').addEventListener('click', openDrawer);
+  $('newBtn').addEventListener('click', newChat);
+  $('newChatBtn').addEventListener('click', newChat);
+  $('closeBtn').addEventListener('click', closeDrawer);
+  $('scrim').addEventListener('click', closeDrawer);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDrawer();
+  });
+
+  // Boot
+  refreshSendBtn();
+  inputEl.focus();
+})();
+</script>
+</body>
+</html>
